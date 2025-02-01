@@ -82,7 +82,7 @@ DATABASES = {
         'NAME': 'bharath_fd_db',
         'USER': 'admin',
         'PASSWORD': 'bharath_fd',
-        'HOST': 'db',  # Name of the database container service
+        'HOST': 'db',  
         'PORT': '5432',
     }
 }
