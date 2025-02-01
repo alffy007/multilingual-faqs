@@ -28,7 +28,7 @@ The **FAQ Management System** is a Django-based web application designed for han
 
 ```bash
 git clone https://github.com/alffy007/multilingual-faqs
-cd multilingual-faqs
+cd faq_service
 ```
 
 ### 2. Create and activate a virtual environment
