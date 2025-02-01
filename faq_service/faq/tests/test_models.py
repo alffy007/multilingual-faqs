@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from faq.models import FAQ
 from django.db import transaction
 
+
 @pytest.mark.django_db
 def test_faq_translations():
     # Create a test FAQ
@@ -10,7 +11,7 @@ def test_faq_translations():
         question_en="What is Django?",
         answer_en="Django is a Python framework."
     )
-    
+
     translations = {
         'hi': {
             'question': 'डjango क्या है?',
@@ -32,6 +33,6 @@ def test_faq_translations():
 
     # Assertions after the translation is mocked or completed
     assert isinstance(faq.translations, dict)
-    assert 'hi' in faq.translations  # Check if translations for Hindi are present
-    assert 'bn' in faq.translations  # Check if translations for Bengali are present
-    assert 'ml' in faq.translations  # Check if translations for Malayalam are present
+    assert 'hi' in faq.translations  
+    assert 'bn' in faq.translations 
+    assert 'ml' in faq.translations  

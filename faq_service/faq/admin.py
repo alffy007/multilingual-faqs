@@ -8,12 +8,11 @@ class FAQAdmin(admin.ModelAdmin):
             'all': ('css/custom_admin.css',)
         }
 
-
     list_display = ('question_en', 'is_updated', 'translations')
     search_fields = ['question_en', 'answer_en']
     list_filter = ['is_updated']
     fields = ('question_en', 'answer_en', 'translations', 'is_updated')
     readonly_fields = ('translations',)
 
-admin.site.register(FAQ, FAQAdmin)
 
+admin.site.register(FAQ, FAQAdmin)

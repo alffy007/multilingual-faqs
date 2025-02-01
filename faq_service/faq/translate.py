@@ -3,10 +3,13 @@ import logging
 from celery import shared_task
 from googletrans import Translator
 
+# Initialize logger
 logger = logging.getLogger(__name__)
 
+
+
+# Asynchronous function to translate text to the specified language
 async def translate_text(text: str, dest_lang: str) -> str:
-    """Translate text to the target language asynchronously."""
     try:
         translator = Translator()
         translation = await translator.translate(text, dest=dest_lang)
@@ -15,12 +18,15 @@ async def translate_text(text: str, dest_lang: str) -> str:
         logger.error('Translation error: %s', str(exc))
         raise
 
+
+
+# Celery task to translate FAQ
 @shared_task(bind=True, max_retries=3)
-def translate_faq(self, faq_id: int) :
-    """Translate FAQ content to multiple languages."""
+def translate_faq(self, faq_id: int):
     from faq.models import FAQ
 
     try:
+        # Fetch the FAQ object by ID
         faq = FAQ.objects.filter(id=faq_id).first()
         if not faq:
             logger.error('FAQ %d not found', faq_id)
@@ -32,22 +38,24 @@ def translate_faq(self, faq_id: int) :
             faq.question_en
         )
 
-        languages = ['hi', 'bn', 'ml']  # Add more languages as needed
+        # List of target languages
+        languages = ['hi', 'bn', 'ml']
         translations_dict = {}
 
-        # Only proceed if `is_updated` is True (indicating updates)
+        # Check if the FAQ needs to be updated
         if not faq.is_updated:
-            logger.info(f"FAQ {faq_id} already translated, skipping translation.")
-            return None  # Skip translation if it's already done
+            logger.info(
+                f"FAQ {faq_id} already translated, skipping translation.")
+            return None
 
+        # Create a new event loop for asynchronous tasks
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
 
         try:
+            # Asynchronous function to process translations
             async def process_translations() -> None:
-                """Process translations for all target languages."""
                 for lang in languages:
-                    # Translate each FAQ content
                     question_task = translate_text(faq.question_en, lang)
                     answer_task = translate_text(faq.answer_en, lang)
                     translated_question, translated_answer = await asyncio.gather(
@@ -56,11 +64,12 @@ def translate_faq(self, faq_id: int) :
                         return_exceptions=True
                     )
 
-                    # Handle any exceptions that occurred during translation
+                    # Check for translation errors
                     for result in [translated_question, translated_answer]:
                         if isinstance(result, Exception):
-                            logger.error(f"Translation failed for language {lang}: {result}")
-                            return  # Stop and return if translation fails
+                            logger.error(
+                                f"Translation failed for language {lang}: {result}")
+                            return
 
                     logger.info(f'Completed translation to {lang}')
                     translations_dict[lang] = {
@@ -69,16 +78,15 @@ def translate_faq(self, faq_id: int) :
                     }
 
         finally:
+            # Run the asynchronous translation process
             loop.run_until_complete(process_translations())
             loop.close()
 
-        # After translations are done, save them in the FAQ model
+        # Update FAQ translations if new translations are available
         if translations_dict:
             current_translations = faq.translations or {}
             current_translations.update(translations_dict)
             faq.translations = current_translations
-
-            # Save translations and set `is_updated` to False after the translations
             faq.is_updated = False
             faq.save(update_fields=['translations', 'is_updated'])
 

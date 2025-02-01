@@ -8,7 +8,8 @@ from .models import FAQ
 from .translate import translate_faq
 
 
-@method_decorator(csrf_exempt, name='dispatch')  # To allow POST, PUT, DELETE without CSRF token (for API)
+# To allow POST, PUT, DELETE without CSRF token (for API)
+@method_decorator(csrf_exempt, name='dispatch')
 class FAQView(View):
     def get(self, request):
         lang = request.GET.get("lang", "en")  # Default to English
@@ -26,7 +27,8 @@ class FAQView(View):
                 is_updated=True,
             )
 
-            return JsonResponse({"question_en": faq.question_en,"answer_en":faq.answer_en, "id": faq.id}, status=200)
+            return JsonResponse({"question_en": faq.question_en,
+                                "answer_en": faq.answer_en, "id": faq.id}, status=200)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
 
