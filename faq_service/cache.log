@@ -384,3 +384,5 @@
 [2025-02-01 19:17:11] INFO [django.core.cache] Cache set for faq_translation_1_en
 [2025-02-01 19:17:11] INFO [django.core.cache] Cache miss for faq_translation_2_en
 [2025-02-01 19:17:11] INFO [django.core.cache] Cache set for faq_translation_2_en
+[2025-02-01 17:26:36] INFO [django.core.cache] Cache miss for faq_translation_1_bn
+[2025-02-01 17:26:36] INFO [django.core.cache] Cache set for faq_translation_1_bn
