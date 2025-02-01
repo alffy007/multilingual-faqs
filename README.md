@@ -44,29 +44,20 @@ source venv/bin/activate  # For Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 4. Set up environment variables
 
-Create a `.env` file in the root directory with the following variables:
-
-```plaintext
-DJANGO_SECRET_KEY=<your-secret-key>
-DATABASE_URL=postgres://<username>:<password>@<hostname>:<port>/<dbname>
-REDIS_URL=redis://localhost:6379/0
-```
-
-### 5. Run database migrations
+### 4. Run database migrations
 
 ```bash
 python manage.py migrate
 ```
 
-### 6. Create a superuser for Django Admin
+### 5. Create a superuser for Django Admin
 
 ```bash
 python manage.py createsuperuser
 ```
 
-### 7. Run the development server
+### 6. Run the development server
 
 ```bash
 python manage.py runserver
@@ -78,7 +69,7 @@ Access the app at [http://localhost:8000](http://localhost:8000).
 
 The FAQ Management System provides a RESTful API for managing FAQs. Below are the available endpoints:
 
-### 1. Get All FAQs
+### 1. Get FAQs
 
 ```http
 GET /api/faqs/
@@ -87,12 +78,15 @@ GET /api/faqs/
 ```json
 [
   {
-    "question_en": "What is this system?",
-    "answer_en": "This is a multilingual FAQ management system.",
-    "translations": {
-      "es": {"question": "¿Qué es este sistema?", "answer": "Este es un sistema de gestión de preguntas frecuentes multilingüe."}
-    },
-    "is_updated": true
+    "question": "will there be accomadation",
+    "answer": "\u003Cp\u003EYes, There will be accomadation\u003C/p\u003E"
+  },
+    "question": "what will be the price?",
+    "answer": "almost 2"
+  },
+  {
+    "question": "what about tommorrow?",
+    "answer": "\u003Cp\u003Efine\u003C/p\u003E"
   }
 ]
 ```
@@ -102,20 +96,26 @@ GET /api/faqs/
 ```http
 GET /api/faqs/?lang={language}/
 ```
-languaage = hi,bn,ml
+languages configured = hi, bn, ml (ps: Easy to add new languages)
 #### Response
 ```json
-{
-  "question_en": "What is this system?",
-  "answer_en": "This is a multilingual FAQ management system.",
-  "translations": {
-    "es": {"question": "¿Qué es este sistema?", "answer": "Este es un sistema de gestión de preguntas frecuentes multilingüe."}
+[
+  {
+    "question": "कीमत क्या होगी?",
+    "answer": "लगभग 2"
   },
-  "is_updated": true
-}
+  {
+    "question": "Django क्या है?",
+    "answer": "\u003Cp\u003E एक पायथन फ्रेमवर्क \u003C/p\u003E"
+  },
+  {
+    "question": "फास्टपी क्या है?",
+    "answer": "\u003Cp\u003E एक पायथन फ्रेमवर्क \u003C/p\u003E"
+  }
+]
 ```
 
-### 3. Create a New FAQ
+### 3. Create New FAQ
 
 ```http
 POST /api/faqs/
@@ -133,7 +133,7 @@ POST /api/faqs/
 
   "question_en": "How does caching work?",
   "answer_en": "Caching improves performance by storing translations for quick access.",
-  "translations": {},
+  "translations": {(translating in background and update automaticaly)},
   "is_updated": true
 }
 ```
