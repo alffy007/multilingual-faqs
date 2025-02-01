@@ -82,6 +82,43 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://localhost:6379/1', 
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'cache': {
+            'level': 'INFO',  # Adjust level if needed
+            'class': 'logging.FileHandler',
+            'filename': 'cache.log',  # Ensure this path is writable
+            'formatter': 'verbose',
+        },
+    },
+    'formatters': {
+        'verbose': {
+            'format': '[%(asctime)s] %(levelname)s [%(name)s] %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        },
+    },
+    'loggers': {
+        'django.core.cache': {
+            'handlers': ['cache'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
+
+
 
 
 # Password validation
