@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-k5z3zp+sl+8$)6ifn$gffwf#j3!c=j6c$!5chlfj$$2^o5o*7(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 
 # Application definition
@@ -83,7 +83,7 @@ DATABASES = {
         'NAME': os.getenv('DB_NAME', 'bharath_fd_db'),
         'USER': os.getenv('DB_USER', 'admin'),
         'PASSWORD': os.getenv('DB_PASSWORD', 'bharath_fd'),
-        'HOST': os.getenv('DB_HOST', 'your_render_db_host'),  # Use the host Render provides for your DB
+        'HOST': os.getenv('DB_HOST', 'db'),  # Use the host Render provides for your DB
         'PORT': os.getenv('DB_PORT', '5432'),  # Default PostgreSQL port
     }
 }
