@@ -15,7 +15,8 @@ class FAQ(models.Model):
         default="No answer available", blank=True, help_text="Enter your answer in English"
     )
     translations = models.JSONField(default=dict, blank=True)
-    is_updated = models.BooleanField(default=False, help_text="Flag indicating if the FAQ content has been updated")
+    is_updated = models.BooleanField(default=True, help_text="Flag indicating if the FAQ content has been updated")
+
     def save(self, *args, **kwargs):
         cache.delete(f"faq_translation_{self.id}_en")
         for lang in self.translations:

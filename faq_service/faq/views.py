@@ -26,7 +26,7 @@ class FAQView(View):
                 is_updated=True,
             )
 
-            return JsonResponse({"message": "FAQ created", "id": faq.id}, status=200)
+            return JsonResponse({"question_en": faq.question_en,"answer_en":faq.answer_en, "id": faq.id}, status=200)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON data"}, status=400)
 
