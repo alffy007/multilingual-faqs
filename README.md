@@ -189,32 +189,41 @@ docker-compose up
 ### 3. Docker Compose File
 
 ```yaml
-version: '3.8'
+version: '3'
 
 services:
   db:
-    image: postgres:13
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+    image: postgres:15
     environment:
-      POSTGRES_DB: faq_db
+      POSTGRES_DB: bharath_fd_db
       POSTGRES_USER: admin
-      POSTGRES_PASSWORD: faqpass
+      POSTGRES_PASSWORD: bharath_fd
+    restart: always  
+    ports:
+      - 5432:5432
+    volumes:
+      - db_data:/var/lib/postgresql/data
 
   web:
+    restart: always
     build: .
-    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
-      - "8000:8000"
+      - "80:80"
     depends_on:
       - db
-    environment:
-      - DJANGO_SETTINGS_MODULE=faq_service.settings
+  redis:
+    image: "redis"
+    ports:
+      - "6379:6379"    
+    volumes:
+      - redis_data:/data  
 
 volumes:
-  postgres_data:
+  db_data:
+  redis_data:
+
 ```
 
 ## Deployment to Render
